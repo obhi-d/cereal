@@ -132,10 +132,10 @@ namespace cereal
 
       //! Error message used for unregistered polymorphic casts
       #define UNREGISTERED_POLYMORPHIC_CAST_EXCEPTION(LoadSave)                                                                                                                \
-        throw cereal::Exception("Trying to " #LoadSave " a registered polymorphic type with an unregistered polymorphic cast.\n"                                               \
+        CEREAL_THROW(cereal::Exception("Trying to " #LoadSave " a registered polymorphic type with an unregistered polymorphic cast.\n"                                               \
                                 "Could not find a path to a base class (" + util::demangle(baseInfo.name()) + ") for type: " + ::cereal::util::demangledName<Derived>() + "\n" \
                                 "Make sure you either serialize the base class at some point via cereal::base_class or cereal::virtual_base_class.\n"                          \
-                                "Alternatively, manually register the association with CEREAL_REGISTER_POLYMORPHIC_RELATION.");
+                                "Alternatively, manually register the association with CEREAL_REGISTER_POLYMORPHIC_RELATION."));
 
       //! Checks if the mapping object that can perform the upcast or downcast exists, and returns it if so
       /*! Uses the type index from the base and derived class to find the matching

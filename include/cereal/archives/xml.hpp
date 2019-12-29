@@ -432,13 +432,13 @@ namespace cereal
           //std::cerr << "-----Error-----" << std::endl;
           //std::cerr << e.what() << std::endl;
           //std::cerr << e.where<char>() << std::endl;
-          throw Exception("XML Parsing failed - likely due to invalid characters or invalid naming");
+          CEREAL_THROW(Exception("XML Parsing failed - likely due to invalid characters or invalid naming"));
         }
 
         // Parse the root
         auto root = itsXML.first_node( xml_detail::CEREAL_XML_STRING );
         if( root == nullptr )
-          throw Exception("Could not detect cereal root node - likely due to empty or invalid input");
+          CEREAL_THROW(Exception("Could not detect cereal root node - likely due to empty or invalid input"));
         else
           itsNodes.emplace( root );
       }
@@ -462,7 +462,7 @@ namespace cereal
         auto decoded = base64::decode( encoded );
 
         if( size != decoded.size() )
-          throw Exception("Decoded binary data size does not match specified size");
+          CEREAL_THROW(Exception("Decoded binary data size does not match specified size"));
 
         std::memcpy( data, decoded.data(), decoded.size() );
 
@@ -498,7 +498,7 @@ namespace cereal
           next = itsNodes.top().search( expectedName );
 
           if( next == nullptr )
-            throw Exception("XML Parsing failed - provided NVP (" + std::string(expectedName) + ") not found");
+            CEREAL_THROW(Exception("XML Parsing failed - provided NVP (" + std::string(expectedName) + ") not found"));
         }
 
         itsNodes.emplace( next );
@@ -611,51 +611,51 @@ namespace cereal
       //! Loads a type best represented as a float from the current top node
       void loadValue( float & value )
       {
-        try
+        CEREAL_TRY
         {
           value = std::stof( itsNodes.top().node->value() );
         }
-        catch( std::out_of_range const & )
+        CEREAL_CATCH( std::out_of_range const & )
         {
           // special case for denormalized values
           std::istringstream is( itsNodes.top().node->value() );
           is >> value;
           if( std::fpclassify( value ) != FP_SUBNORMAL )
-            throw;
+            CEREAL_RETHROW;
         }
       }
 
       //! Loads a type best represented as a double from the current top node
       void loadValue( double & value )
       {
-        try
+        CEREAL_TRY
         {
           value = std::stod( itsNodes.top().node->value() );
         }
-        catch( std::out_of_range const & )
+        CEREAL_CATCH( std::out_of_range const & )
         {
           // special case for denormalized values
           std::istringstream is( itsNodes.top().node->value() );
           is >> value;
           if( std::fpclassify( value ) != FP_SUBNORMAL )
-            throw;
+            CEREAL_RETHROW;
         }
       }
 
       //! Loads a type best represented as a long double from the current top node
       void loadValue( long double & value )
       {
-        try
+        CEREAL_TRY
         {
           value = std::stold( itsNodes.top().node->value() );
         }
-        catch( std::out_of_range const & )
+        CEREAL_CATCH( std::out_of_range const & )
         {
           // special case for denormalized values
           std::istringstream is( itsNodes.top().node->value() );
           is >> value;
           if( std::fpclassify( value ) != FP_SUBNORMAL )
-            throw;
+            CEREAL_RETHROW;
         }
       }
 

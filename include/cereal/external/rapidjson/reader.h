@@ -80,7 +80,7 @@ CEREAL_RAPIDJSON_DIAG_OFF(effc++)
 
     \code
     #define CEREAL_RAPIDJSON_PARSE_ERROR_NORETURN(parseErrorCode,offset) \
-       throw ParseException(parseErrorCode, #parseErrorCode, offset)
+       CEREAL_THROW(ParseException(parseErrorCode, #parseErrorCode, offset))
 
     #include <stdexcept>               // std::runtime_error
     #include "rapidjson/error/error.h" // rapidjson::ParseResult

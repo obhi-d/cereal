@@ -151,4 +151,21 @@
 #define CEREAL_ALIGNOF alignof
 #endif // end MSVC check
 
+
+#ifndef CERAL_SUPPORT_EXCEPTIONS
+#ifndef CEREAL_ERROR_HANDLER
+#include <iostream>
+#define CEREAL_ERROR_HANDLER(str) std::cerr << str
+#endif
+#define CEREAL_THROW(xpress) do { CEREAL_ERROR_HANDLER(xpress.what()); std::abort(); } while(0)
+#define CEREAL_TRY      if (true)
+#define CEREAL_CATCH(what) if (false)
+#define CEREAL_RETHROW std::abort()
+#else
+#define CEREAL_THROW(xpress) throw xpress
+#define CEREAL_TRY      try
+#define CEREAL_CATCH(what) catch(what)
+#define CEREAL_RETHROW throw
+#endif
+
 #endif // CEREAL_MACROS_HPP_
